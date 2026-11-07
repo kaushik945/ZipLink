@@ -1,0 +1,10 @@
+const number = (value, digits = 2) =>
+  Number.isFinite(Number(value)) ? Number(value).toFixed(digits) : '—';
+export function renderLoadTestReport(report) {
+  const rows = (report.runs || []).map((run) => {
+    const metric = run.metrics.ziplink_workload_duration?.values || {};
+    const requests = run.metrics.ziplink_workload_requests?.values || {};
+    return `| ${run.label} | ${run.vus} | ${requests.count || 0} | ${number(requests.rate)} | ${number(metric['p(50)'])} | ${number(metric['p(95)'])} | ${number(metric['p(99)'])} | ${number((run.metrics.ziplink_error_rate?.values.rate || 0) * 100)}% |`;
+  });
+  return `# ZipLink local load-test results\n\nRun: ${report.timestamp} (UTC). ${report.error ? `Incomplete: ${report.error}` : 'All workload thresholds passed.'}\n\n| Workload | VUs | Requests | req/s | p50 ms | p95 ms | p99 ms | Errors |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n${rows.join('\n')}\n\nExpected click events: ${report.expectedEvents ?? 'not checked'}. Persisted: ${report.persistedEvents ?? 'not checked'}. Includes setup/warm-up visits.\n\nPeak sampled backlog: ${report.queuePeakSampled ?? 'unknown'}. Final queue: ${report.finalQueue ? JSON.stringify(report.finalQueue) : 'not checked'}. Queue sampling is once per second.\n\nCleanup: ${report.cleanup || report.cleanupError || 'not recorded'}.\n\n## Interpretation\n\nThis is a local HTTP, closed-loop test with a 200 ms pause per iteration. The 10-VU baseline is repeated three times; the 20-VU run is exploratory. Creation/mixed runs are small 20-iteration functional bursts, not sustained write benchmarks. Three warmed links do not represent large-cardinality or cold traffic. All components share local resources. Results do not establish maximum capacity, a production SLA, an original-version speedup, or outage durability. Percentiles are per run; do not average them into a pooled percentile.\n\nApplication cache-hit ratio must be calculated separately from API process-counter deltas; generic Redis keyspace hits also include sessions/other state. See docs/BENCHMARKS.md.\n`;
+}

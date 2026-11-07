@@ -1,22 +1,55 @@
 {
   "name": "url-shortener",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
+  "description": "A full-stack URL shortening application built with **React, Node.js, Express.js, and MySQL**. ZipLink converts long URLs into compact, shareable links while tracking clicks and maintaining a history of shortened URLs through a responsive dashboard.",
+  "homepage": "https://github.com/kaushik945/ZipLink#readme",
+  "bugs": {
+    "url": "https://github.com/kaushik945/ZipLink/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaushik945/ZipLink.git"
+  },
+  "license": "ISC",
+  "author": "",
   "type": "module",
+  "main": "eslint.config.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node server/server.cjs",
+    "worker": "node server/src/workers/analytics.js",
+    "migrate": "node server/src/config/migrate.js",
+    "test": "node --test server/tests/*.test.js",
+    "test:integration": "node scripts/integration.js",
+    "format": "prettier --write src server scripts benchmarks docs/*.md README.md package.json eslint.config.js vite.config.js index.html docker-compose.yml .prettierrc.json",
+    "format:check": "prettier --check src server scripts benchmarks docs/*.md README.md package.json eslint.config.js vite.config.js index.html docker-compose.yml .prettierrc.json",
+    "queue:status": "node scripts/queue-status.js",
+    "bench": "k6 run benchmarks/scenarios.js",
+    "loadtest": "node scripts/load-test.js"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "bullmq": "^6.7.2",
+    "connect-redis": "^10.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "helmet": "^8.3.0",
+    "ioredis": "^6.0.0",
     "mysql2": "^3.24.3",
+    "pino": "^10.4.0",
+    "pino-http": "^11.0.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-router-dom": "^7.18.3"
+    "react-router-dom": "^7.18.3",
+    "recharts": "^3.10.1",
+    "redis": "^6.3.1",
+    "ua-parser-js": "^2.0.10"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -27,6 +60,8 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.4",
     "globals": "^17.11.0",
+    "prettier": "^3.9.10",
+    "supertest": "^7.3.2",
     "vite": "^8.2.2"
   }
 }

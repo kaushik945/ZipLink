@@ -2,3 +2,11 @@ node_modules/
 .env
 dist/
 .DS_Store
+# Private interview preparation notes
+/docs/private/
+coverage/
+.playwright-mcp/
+.npm-cache/
+.local-services/
+.env.*
+!.env.example

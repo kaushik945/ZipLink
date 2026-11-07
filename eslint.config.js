@@ -1,11 +1,11 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import js from '@eslint/js';
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', '.npm-cache', '.local-services', 'docs/private', '.playwright-mcp']),
   {
     files: ['**/*.{js,jsx}'],
     extends: [
@@ -18,4 +18,15 @@ export default defineConfig([
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
   },
-])
+  {
+    files: ['server/**/*.js', 'server/**/*.cjs', 'scripts/**/*.js', 'benchmarks/**/*.js'],
+    languageOptions: { globals: globals.node },
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
+  {
+    files: ['test.js', 'benchmarks/**/*.js'],
+    languageOptions: {
+      globals: { ...globals.node, __VU: 'readonly', __ITER: 'readonly', __ENV: 'readonly' },
+    },
+  },
+]);
